@@ -3,6 +3,7 @@ package com.adaptionsoft.games.uglytrivia;
 import com.adaptionsoft.games.trivia.GameStateException;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,10 +36,12 @@ public class Game {
     LinkedList sportsQuestions = new LinkedList();
     LinkedList rockQuestions = new LinkedList();
 
-    Player currentPlayer = null;
+	Player currentPlayer;
     boolean isGettingOutOfPenaltyBox;
-    
-    public  Game(){
+
+	Iterator<Player> playerIterator;
+
+	public  Game(){
     	for (int i = 0; i < 50; i++) {
 			popQuestions.addLast("Pop Question " + i);
 			scienceQuestions.addLast(("Science Question " + i));
@@ -58,11 +61,10 @@ public class Game {
 		}
 
 		Player player = new Player(playerName);
-		players.add(player);
 
-		if (players.size() == 1) {
-			currentPlayer = player;
-		}
+		players.add(player);
+		playerIterator = players.iterator();
+		currentPlayer = playerIterator.next();
 
 		System.out.println(playerName + " was added");
 		System.out.println("They are player number " + players.size());
@@ -84,10 +86,10 @@ public class Game {
 		if (isInPenaltyBox()) {
 			isGettingOutOfPenaltyBox = isRollOdd(roll);
 			if (isGettingOutOfPenaltyBox) {
-				System.out.println(getPlayer() + " is getting out of the penalty box");
+				System.out.println(currentPlayer + " is getting out of the penalty box");
 				movePlayerAndAskQuestion(roll);
 			} else {
-				System.out.println(getPlayer() + " is not getting out of the penalty box");
+				System.out.println(currentPlayer + " is not getting out of the penalty box");
 			}
 		} else {
 			movePlayerAndAskQuestion(roll);
@@ -96,7 +98,7 @@ public class Game {
 
 	private void displayRoll(int roll)
 	{
-		System.out.println(getPlayer() + " is the current player");
+		System.out.println(currentPlayer + " is the current player");
 		System.out.println("They have rolled a " + roll);
 	}
 
@@ -109,7 +111,7 @@ public class Game {
 	{
 		setPlayerPosition(roll);
 
-		System.out.println(getPlayer()
+		System.out.println(currentPlayer
                 + "'s new location is "
                 + getPlayerPosition());
 		System.out.println("The category is " + currentCategory());
@@ -121,11 +123,11 @@ public class Game {
 		if (newPosition > 11) {
 			newPosition -= 12;
 		}
-		getPlayer().position = newPosition;
+		currentPlayer.position = newPosition;
 	}
 
 	private int getPlayerPosition() {
-		return getPlayer().position;
+		return currentPlayer.position;
 	}
 
 	private void askQuestion() {
@@ -159,7 +161,7 @@ public class Game {
 				System.out.println("Answer was correct!!!!");
 				advanceToNextPlayer();
 				incrementPlayerCoins();
-				System.out.println(getPlayer()
+				System.out.println(currentPlayer
 						+ " now has "
 						+ getPlayerCoins()
 						+ " Gold Coins.");
@@ -178,7 +180,7 @@ public class Game {
 		
 			System.out.println("Answer was correct!!!!");
 			incrementPlayerCoins();
-			System.out.println(getPlayer()
+			System.out.println(currentPlayer
 					+ " now has "
 					+ getPlayerCoins()
 					+ " Gold Coins.");
@@ -191,32 +193,23 @@ public class Game {
 	}
 
 	private void incrementPlayerCoins() {
-		 getPlayer().coins++;
+		currentPlayer.coins++;
 	}
 
-	private Player getPlayer() {
-//		return players.get(currentPlayer);
-		return currentPlayer;
-    }
-
 	private int getPlayerCoins() {
-		return getPlayer().coins;
+		return currentPlayer.coins;
 	}
 
 	private void advanceToNextPlayer() {
-		//currentPlayer++;
-		//if (currentPlayer == players.size()) currentPlayer = 0;
-
-		if (players.indexOf(currentPlayer) == players.size() - 1) {
-			currentPlayer = players.get(0);
-		} else {
-			currentPlayer = players.get(players.indexOf(currentPlayer)+1);
+		if (!playerIterator.hasNext()) {
+			playerIterator = players.iterator();
 		}
+		currentPlayer = playerIterator.next();
 	}
 
 	public boolean wrongAnswer(){
 		System.out.println("Question was incorrectly answered");
-		System.out.println(getPlayer() + " was sent to the penalty box");
+		System.out.println(currentPlayer + " was sent to the penalty box");
 		setInPenaltyBox(true);
 
 		advanceToNextPlayer();
@@ -224,11 +217,11 @@ public class Game {
 	}
 
 	private void setInPenaltyBox(boolean inPenaltyBox) {
-		getPlayer().inPenaltyBox = inPenaltyBox;
+		currentPlayer.inPenaltyBox = inPenaltyBox;
 	}
 
 	private boolean isInPenaltyBox() {
-    	return getPlayer().inPenaltyBox;
+		return currentPlayer.inPenaltyBox;
 	}
 
 	private boolean didPlayerWin() {
