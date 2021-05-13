@@ -35,7 +35,7 @@ public class Game {
     LinkedList sportsQuestions = new LinkedList();
     LinkedList rockQuestions = new LinkedList();
 
-    int currentPlayer = 0;
+    Player currentPlayer = null;
     boolean isGettingOutOfPenaltyBox;
     
     public  Game(){
@@ -58,8 +58,11 @@ public class Game {
 		}
 
 		Player player = new Player(playerName);
-
 		players.add(player);
+
+		if (players.size() == 1) {
+			currentPlayer = player;
+		}
 
 		System.out.println(playerName + " was added");
 		System.out.println("They are player number " + players.size());
@@ -81,10 +84,10 @@ public class Game {
 		if (isInPenaltyBox()) {
 			isGettingOutOfPenaltyBox = isRollOdd(roll);
 			if (isGettingOutOfPenaltyBox) {
-				System.out.println(players.get(currentPlayer) + " is getting out of the penalty box");
+				System.out.println(getPlayer() + " is getting out of the penalty box");
 				movePlayerAndAskQuestion(roll);
 			} else {
-				System.out.println(players.get(currentPlayer) + " is not getting out of the penalty box");
+				System.out.println(getPlayer() + " is not getting out of the penalty box");
 			}
 		} else {
 			movePlayerAndAskQuestion(roll);
@@ -93,7 +96,7 @@ public class Game {
 
 	private void displayRoll(int roll)
 	{
-		System.out.println(players.get(currentPlayer) + " is the current player");
+		System.out.println(getPlayer() + " is the current player");
 		System.out.println("They have rolled a " + roll);
 	}
 
@@ -106,7 +109,7 @@ public class Game {
 	{
 		setPlayerPosition(roll);
 
-		System.out.println(players.get(currentPlayer)
+		System.out.println(getPlayer()
                 + "'s new location is "
                 + getPlayerPosition());
 		System.out.println("The category is " + currentCategory());
@@ -118,11 +121,11 @@ public class Game {
 		if (newPosition > 11) {
 			newPosition -= 12;
 		}
-		players.get(currentPlayer).position = newPosition;
+		getPlayer().position = newPosition;
 	}
 
 	private int getPlayerPosition() {
-		return players.get(currentPlayer).position;
+		return getPlayer().position;
 	}
 
 	private void askQuestion() {
@@ -156,7 +159,7 @@ public class Game {
 				System.out.println("Answer was correct!!!!");
 				advanceToNextPlayer();
 				incrementPlayerCoins();
-				System.out.println(players.get(currentPlayer)
+				System.out.println(getPlayer()
 						+ " now has "
 						+ getPlayerCoins()
 						+ " Gold Coins.");
@@ -175,7 +178,7 @@ public class Game {
 		
 			System.out.println("Answer was correct!!!!");
 			incrementPlayerCoins();
-			System.out.println(players.get(currentPlayer)
+			System.out.println(getPlayer()
 					+ " now has "
 					+ getPlayerCoins()
 					+ " Gold Coins.");
@@ -188,21 +191,32 @@ public class Game {
 	}
 
 	private void incrementPlayerCoins() {
-		 players.get(currentPlayer).coins++;
+		 getPlayer().coins++;
 	}
 
+	private Player getPlayer() {
+//		return players.get(currentPlayer);
+		return currentPlayer;
+    }
+
 	private int getPlayerCoins() {
-		return players.get(currentPlayer).coins;
+		return getPlayer().coins;
 	}
 
 	private void advanceToNextPlayer() {
-		currentPlayer++;
-		if (currentPlayer == players.size()) currentPlayer = 0;
+		//currentPlayer++;
+		//if (currentPlayer == players.size()) currentPlayer = 0;
+
+		if (players.indexOf(currentPlayer) == players.size() - 1) {
+			currentPlayer = players.get(0);
+		} else {
+			currentPlayer = players.get(players.indexOf(currentPlayer)+1);
+		}
 	}
 
 	public boolean wrongAnswer(){
 		System.out.println("Question was incorrectly answered");
-		System.out.println(players.get(currentPlayer)+ " was sent to the penalty box");
+		System.out.println(getPlayer() + " was sent to the penalty box");
 		setInPenaltyBox(true);
 
 		advanceToNextPlayer();
@@ -210,11 +224,11 @@ public class Game {
 	}
 
 	private void setInPenaltyBox(boolean inPenaltyBox) {
-		players.get(currentPlayer).inPenaltyBox = inPenaltyBox;
+		getPlayer().inPenaltyBox = inPenaltyBox;
 	}
 
 	private boolean isInPenaltyBox() {
-    	return players.get(currentPlayer).inPenaltyBox;
+    	return getPlayer().inPenaltyBox;
 	}
 
 	private boolean didPlayerWin() {
