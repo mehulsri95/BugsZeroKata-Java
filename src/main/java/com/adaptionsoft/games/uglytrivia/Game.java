@@ -9,24 +9,6 @@ import java.util.List;
 
 
 public class Game {
-	class Player {
-		String name;
-		int position;
-		int coins;
-		boolean inPenaltyBox;
-
-		public Player(String name) {
-			this.name = name;
-			this.position = 0;
-			this.coins = 0;
-			this.inPenaltyBox = false;
-		}
-
-		@Override
-		public String toString() {
-			return name;
-		}
-	}
 
 	public static final int MAX_PLAYERS = 6;
 	List<Player> players = new ArrayList<>();
@@ -82,8 +64,8 @@ public class Game {
 		if (!this.isPlayable()) throw new GameStateException();
 		
 		displayRoll(roll);
-		
-		if (isInPenaltyBox()) {
+
+		if (currentPlayer.isInPenaltyBox()) {
 			isGettingOutOfPenaltyBox = isRollOdd(roll);
 			if (isGettingOutOfPenaltyBox) {
 				System.out.println(currentPlayer + " is getting out of the penalty box");
@@ -113,21 +95,19 @@ public class Game {
 
 		System.out.println(currentPlayer
                 + "'s new location is "
-                + getPlayerPosition());
+                + currentPlayer.getPosition());
 		System.out.println("The category is " + currentCategory());
 	}
 
+	// TODO: what should manage the player position: Game or Player
+	// what is eligible for refactoring next
 	private void setPlayerPosition(int roll) {
-		int playerPosition = getPlayerPosition();
+		int playerPosition = currentPlayer.getPosition();
 		int newPosition = playerPosition + roll;
 		if (newPosition > 11) {
 			newPosition -= 12;
 		}
-		currentPlayer.position = newPosition;
-	}
-
-	private int getPlayerPosition() {
-		return currentPlayer.position;
+		currentPlayer.setPosition(newPosition);
 	}
 
 	private void askQuestion() {
@@ -143,27 +123,27 @@ public class Game {
 	
 	
 	private String currentCategory() {
-		if (getPlayerPosition() == 0) return "Pop";
-		if (getPlayerPosition() == 4) return "Pop";
-		if (getPlayerPosition() == 8) return "Pop";
-		if (getPlayerPosition() == 1) return "Science";
-		if (getPlayerPosition() == 5) return "Science";
-		if (getPlayerPosition() == 9) return "Science";
-		if (getPlayerPosition() == 2) return "Sports";
-		if (getPlayerPosition() == MAX_PLAYERS) return "Sports";
-		if (getPlayerPosition() == 10) return "Sports";
+		if (currentPlayer.getPosition() == 0) return "Pop";
+		if (currentPlayer.getPosition() == 4) return "Pop";
+		if (currentPlayer.getPosition() == 8) return "Pop";
+		if (currentPlayer.getPosition() == 1) return "Science";
+		if (currentPlayer.getPosition() == 5) return "Science";
+		if (currentPlayer.getPosition() == 9) return "Science";
+		if (currentPlayer.getPosition() == 2) return "Sports";
+		if (currentPlayer.getPosition() == MAX_PLAYERS) return "Sports";
+		if (currentPlayer.getPosition() == 10) return "Sports";
 		return "Rock";
 	}
 
 	public boolean wasCorrectlyAnswered() {
-		if (isInPenaltyBox()){
+		if (currentPlayer.isInPenaltyBox()){
 			if (isGettingOutOfPenaltyBox) {
 				System.out.println("Answer was correct!!!!");
 				advanceToNextPlayer();
-				incrementPlayerCoins();
+				currentPlayer.incrementCoins();
 				System.out.println(currentPlayer
 						+ " now has "
-						+ getPlayerCoins()
+						+ currentPlayer.getCoins()
 						+ " Gold Coins.");
 
 				boolean winner = didPlayerWin();
@@ -174,15 +154,13 @@ public class Game {
 				return true;
 			}
 			
-			
-			
 		} else {
 		
 			System.out.println("Answer was correct!!!!");
-			incrementPlayerCoins();
+			currentPlayer.incrementCoins();
 			System.out.println(currentPlayer
 					+ " now has "
-					+ getPlayerCoins()
+					+ currentPlayer.getCoins()
 					+ " Gold Coins.");
 			
 			boolean winner = didPlayerWin();
@@ -190,14 +168,6 @@ public class Game {
 
 			return winner;
 		}
-	}
-
-	private void incrementPlayerCoins() {
-		currentPlayer.coins++;
-	}
-
-	private int getPlayerCoins() {
-		return currentPlayer.coins;
 	}
 
 	private void advanceToNextPlayer() {
@@ -210,21 +180,13 @@ public class Game {
 	public boolean wrongAnswer(){
 		System.out.println("Question was incorrectly answered");
 		System.out.println(currentPlayer + " was sent to the penalty box");
-		setInPenaltyBox(true);
+		currentPlayer.setInPenaltyBox(true);
 
 		advanceToNextPlayer();
 		return true;
 	}
 
-	private void setInPenaltyBox(boolean inPenaltyBox) {
-		currentPlayer.inPenaltyBox = inPenaltyBox;
-	}
-
-	private boolean isInPenaltyBox() {
-		return currentPlayer.inPenaltyBox;
-	}
-
 	private boolean didPlayerWin() {
-		return !(getPlayerCoins() == 6);
+		return !(currentPlayer.getCoins() == 6);
 	}
 }
