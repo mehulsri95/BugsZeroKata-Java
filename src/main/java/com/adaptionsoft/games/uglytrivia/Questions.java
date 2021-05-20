@@ -4,10 +4,29 @@ package com.adaptionsoft.games.uglytrivia;
 import java.util.LinkedList;
 
 public class Questions {
-    String category;
+
+    enum Category {
+        POP("Pop"),
+        SCIENCE("Science"),
+        ROCK("Rock"),
+        SPORTS("Sports");
+
+        public final String category;
+
+        @Override
+        public String toString() {
+            return category;
+        }
+
+        Category(String category) {
+            this.category = category;
+        }
+    }
+
+    Category category;
     LinkedList<String> questions;
 
-    public Questions(String category) {
+    public Questions(Category category) {
         this.category = category;
         this.questions = new LinkedList<>();
     }

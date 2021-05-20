@@ -1,14 +1,13 @@
 package com.adaptionsoft.games.uglytrivia;
 
 import com.adaptionsoft.games.trivia.GameStateException;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.adaptionsoft.games.uglytrivia.Questions.Category.*;
 
 public class Game {
-
 	public static final int MAX_PLAYERS = 6;
 	List<Player> players;
 
@@ -22,16 +21,16 @@ public class Game {
 	Iterator<Player> playerIterator;
 
 	public Game(){
-		popQuestions = new Questions("Pop");
+		popQuestions = new Questions(POP);
 		popQuestions.populateQuestions();
 
-		sportsQuestions = new Questions("Sports");
+		sportsQuestions = new Questions(SPORTS);
 		sportsQuestions.populateQuestions();
 
-		scienceQuestions = new Questions("Science");
+		scienceQuestions = new Questions(SCIENCE);
 		scienceQuestions.populateQuestions();
 
-		rockQuestions = new Questions("Rock");
+		rockQuestions = new Questions(ROCK);
 		rockQuestions.populateQuestions();
 
 		players = new ArrayList<>();
@@ -118,28 +117,28 @@ public class Game {
 	}
 
 	private void askQuestion() {
-		if (currentCategory() == "Pop")
+		if (currentCategory() == POP.toString())
 			System.out.println(popQuestions.askQuestion());
-		if (currentCategory() == "Science")
+		if (currentCategory() == SCIENCE.toString())
 			System.out.println(scienceQuestions.askQuestion());
-		if (currentCategory() == "Sports")
+		if (currentCategory() == SPORTS.toString())
 			System.out.println(sportsQuestions.askQuestion());
-		if (currentCategory() == "Rock")
+		if (currentCategory() == ROCK.toString())
 			System.out.println(rockQuestions.askQuestion());
 	}
 	
 	
 	private String currentCategory() {
-		if (currentPlayer.getPosition() == 0) return "Pop";
-		if (currentPlayer.getPosition() == 4) return "Pop";
-		if (currentPlayer.getPosition() == 8) return "Pop";
-		if (currentPlayer.getPosition() == 1) return "Science";
-		if (currentPlayer.getPosition() == 5) return "Science";
-		if (currentPlayer.getPosition() == 9) return "Science";
-		if (currentPlayer.getPosition() == 2) return "Sports";
-		if (currentPlayer.getPosition() == MAX_PLAYERS) return "Sports";
-		if (currentPlayer.getPosition() == 10) return "Sports";
-		return "Rock";
+		if (currentPlayer.getPosition() == 0) return POP.toString();
+		if (currentPlayer.getPosition() == 4) return POP.toString();
+		if (currentPlayer.getPosition() == 8) return POP.toString();
+		if (currentPlayer.getPosition() == 1) return SCIENCE.toString();
+		if (currentPlayer.getPosition() == 5) return SCIENCE.toString();
+		if (currentPlayer.getPosition() == 9) return SCIENCE.toString();
+		if (currentPlayer.getPosition() == 2) return SPORTS.toString();
+		if (currentPlayer.getPosition() == 6) return SPORTS.toString();
+		if (currentPlayer.getPosition() == 10) return SPORTS.toString();
+		return ROCK.toString();
 	}
 
 	public boolean wasCorrectlyAnswered() {
