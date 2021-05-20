@@ -4,33 +4,38 @@ import com.adaptionsoft.games.trivia.GameStateException;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 
 public class Game {
 
 	public static final int MAX_PLAYERS = 6;
-	List<Player> players = new ArrayList<>();
+	List<Player> players;
 
-	LinkedList popQuestions = new LinkedList();
-    LinkedList scienceQuestions = new LinkedList();
-    LinkedList sportsQuestions = new LinkedList();
-    LinkedList rockQuestions = new LinkedList();
+	Questions popQuestions;
+	Questions sportsQuestions;
+	Questions scienceQuestions;
+	Questions rockQuestions;
 
-	Player currentPlayer;
     boolean isGettingOutOfPenaltyBox;
-
+	Player currentPlayer;
 	Iterator<Player> playerIterator;
 
-	public  Game(){
-    	for (int i = 0; i < 50; i++) {
-			popQuestions.addLast("Pop Question " + i);
-			scienceQuestions.addLast(("Science Question " + i));
-			sportsQuestions.addLast(("Sports Question " + i));
-			rockQuestions.addLast("Rock Question " + i);
-    	}
-    }
+	public Game(){
+		popQuestions = new Questions("Pop");
+		popQuestions.populateQuestions();
+
+		sportsQuestions = new Questions("Sports");
+		sportsQuestions.populateQuestions();
+
+		scienceQuestions = new Questions("Science");
+		scienceQuestions.populateQuestions();
+
+		rockQuestions = new Questions("Rock");
+		rockQuestions.populateQuestions();
+
+		players = new ArrayList<>();
+	}
 
 	public boolean isPlayable() {
 		return (howManyPlayers() >= 2);
@@ -99,8 +104,10 @@ public class Game {
 		System.out.println("The category is " + currentCategory());
 	}
 
-	// TODO: what should manage the player position: Game or Player
-	// what is eligible for refactoring next
+	// Who should manage the player position: Game or Player?
+	// Game as it knows the rule of the game and may have to
+	// manipulate the position before setting it for the current player
+
 	private void setPlayerPosition(int roll) {
 		int playerPosition = currentPlayer.getPosition();
 		int newPosition = playerPosition + roll;
@@ -112,13 +119,13 @@ public class Game {
 
 	private void askQuestion() {
 		if (currentCategory() == "Pop")
-			System.out.println(popQuestions.removeFirst());
+			System.out.println(popQuestions.askQuestion());
 		if (currentCategory() == "Science")
-			System.out.println(scienceQuestions.removeFirst());
+			System.out.println(scienceQuestions.askQuestion());
 		if (currentCategory() == "Sports")
-			System.out.println(sportsQuestions.removeFirst());
+			System.out.println(sportsQuestions.askQuestion());
 		if (currentCategory() == "Rock")
-			System.out.println(rockQuestions.removeFirst());
+			System.out.println(rockQuestions.askQuestion());
 	}
 	
 	
