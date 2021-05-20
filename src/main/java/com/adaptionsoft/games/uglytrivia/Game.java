@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.adaptionsoft.games.uglytrivia.Questions.*;
 import static com.adaptionsoft.games.uglytrivia.Questions.Category.*;
 
 public class Game {
@@ -117,28 +118,21 @@ public class Game {
 	}
 
 	private void askQuestion() {
-		if (currentCategory() == POP.toString())
+		if (currentCategory() == POP)
 			System.out.println(popQuestions.askQuestion());
-		if (currentCategory() == SCIENCE.toString())
+		if (currentCategory() == SCIENCE)
 			System.out.println(scienceQuestions.askQuestion());
-		if (currentCategory() == SPORTS.toString())
+		if (currentCategory() == SPORTS)
 			System.out.println(sportsQuestions.askQuestion());
-		if (currentCategory() == ROCK.toString())
+		if (currentCategory() == ROCK)
 			System.out.println(rockQuestions.askQuestion());
 	}
 	
-	
-	private String currentCategory() {
-		if (currentPlayer.getPosition() == 0) return POP.toString();
-		if (currentPlayer.getPosition() == 4) return POP.toString();
-		if (currentPlayer.getPosition() == 8) return POP.toString();
-		if (currentPlayer.getPosition() == 1) return SCIENCE.toString();
-		if (currentPlayer.getPosition() == 5) return SCIENCE.toString();
-		if (currentPlayer.getPosition() == 9) return SCIENCE.toString();
-		if (currentPlayer.getPosition() == 2) return SPORTS.toString();
-		if (currentPlayer.getPosition() == 6) return SPORTS.toString();
-		if (currentPlayer.getPosition() == 10) return SPORTS.toString();
-		return ROCK.toString();
+	private Category currentCategory() {
+		if (currentPlayer.getPosition() % 4 == 0) return POP;
+		if (currentPlayer.getPosition() % 4 == 1) return SCIENCE;
+		if (currentPlayer.getPosition() % 4 == 2) return SPORTS;
+		return ROCK;
 	}
 
 	public boolean wasCorrectlyAnswered() {
