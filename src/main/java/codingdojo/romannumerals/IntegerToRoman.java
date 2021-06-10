@@ -20,13 +20,14 @@ package codingdojo.romannumerals;
 * 3.
 * */
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class IntegerToRoman {
 
-    Map<Integer, String> RomanConverter = new HashMap<>();
-    Integer[] values = new Integer[5];
+    Map<Integer, String> RomanConverter = new TreeMap<>(Collections.reverseOrder());
 
     public IntegerToRoman() {
         RomanConverter.put(1, "I");
@@ -34,30 +35,26 @@ public class IntegerToRoman {
         RomanConverter.put(5, "V");
         RomanConverter.put(9, "IX");
         RomanConverter.put(10, "X");
-
-        values[0] = 10;
-        values[1] = 9;
-        values[2] = 5;
-        values[3] = 4;
-        values[4] = 1;
+        RomanConverter.put(40, "XL");
+        RomanConverter.put(50, "L");
     }
 
     public String convert(int i) {
-        //TODO: Refactor this to be more elegant
-        int quot = 0, remain = 0, number = i;
+        int quot;
+        int number = i;
         String answer = "";
         if (i == 0) {
             return "nulla";
         }
-       for (int j = 0; j < values.length; j++)
+       for (int intValue:RomanConverter.keySet())
        {
-           quot = number/values[j];
+           quot = number/intValue;
 
            while (quot > 0)
            {
-               answer += RomanConverter.get(values[j]);
-               number = number - values[j];
-               quot = number/values[j];
+               answer += RomanConverter.get(intValue);
+               number = number - intValue;
+               quot = number/intValue;
            }
        }
         return answer;

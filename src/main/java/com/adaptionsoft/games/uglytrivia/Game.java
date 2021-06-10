@@ -135,6 +135,7 @@ public class Game {
 		return ROCK;
 	}
 
+	//TODO: kata bugs, expand board/categories with minimal changes
 	public boolean wasCorrectlyAnswered() {
 		if (currentPlayer.isInPenaltyBox()){
 			if (isGettingOutOfPenaltyBox) {

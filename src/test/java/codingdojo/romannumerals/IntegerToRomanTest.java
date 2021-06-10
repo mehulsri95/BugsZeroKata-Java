@@ -83,9 +83,14 @@ public class IntegerToRomanTest {
     public void testConvertThirtyNineToRoman() {
         Assert.assertEquals("XXXIX", integerToRoman.convert(39));
     }
-//
-//    @Test
-//    public void testConvertFourtyToRoman() {
-//        Assert.assertEquals("XL", integerToRoman.convert(40));
-//    }
+
+    @Test
+    public void testConvertFortyToRoman() {
+        Assert.assertEquals("XL", integerToRoman.convert(40));
+    }
+
+    @Test
+    public void testConvertSixtyToRoman() {
+        Assert.assertEquals("LX", integerToRoman.convert(60));
+    }
 }
