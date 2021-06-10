@@ -21,7 +21,6 @@ package codingdojo.romannumerals;
 * */
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -37,9 +36,24 @@ public class IntegerToRoman {
         RomanConverter.put(10, "X");
         RomanConverter.put(40, "XL");
         RomanConverter.put(50, "L");
+        RomanConverter.put(90, "XC");
+        RomanConverter.put(100, "C");
+        RomanConverter.put(400, "CD");
+        RomanConverter.put(500, "D");
+        RomanConverter.put(900, "CM");
+        RomanConverter.put(1000, "M");
     }
 
     public String convert(int i) {
+        //TODO: reflect, improve this. try reverse.
+        if (i<0) {
+            throw new NumberFormatException("No negatives allowed");
+        }
+
+        if (i>3000) {
+            throw new NumberFormatException("No negatives allowed");
+        }
+
         int quot;
         int number = i;
         String answer = "";
